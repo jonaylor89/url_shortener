@@ -1,7 +1,7 @@
 [package]
 name = "set_key"
 version = "0.1.0"
-edition = "2021"
+edition = "2018"
 authors = ["John Naylor <jonaylor89@gmail.com>"]
 autobins = false
 
@@ -12,7 +12,7 @@ serde_json = "^1"
 serde_derive = "^1"
 log = "^0.4"
 simple_logger = "^1"
-redis = "0.20.0"
+redis = { version = "0.21.4", features = ["tls"] }
 rand = "0.8.0"
 
 [[bin]]

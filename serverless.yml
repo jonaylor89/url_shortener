@@ -1,0 +1,24 @@
+service: urlShortener
+
+provider:
+  name: aws
+  runtime: rust
+  plugins:
+  # this registers the plugin
+  # with serverless
+  - serverless-rust
+
+functions:
+  getKey:
+    handler: get_key # required, handler set in AWS Lambda
+    name: urlShortenerGetKey # optional, Deployed Lambda name
+    description: Description of what the lambda function does # optional, Description to publish to AWS
+    runtime: provided.al2 # optional overwrite, default is provider runtime
+
+  setKey:
+    handler: set_key # required, handler set in AWS Lambda
+    name: urlShortenerGetKey # optional, Deployed Lambda name
+    description: Description of what the lambda function does # optional, Description to publish to AWS
+    runtime: provided.al2 # optional overwrite, default is provider runtime
+
+
