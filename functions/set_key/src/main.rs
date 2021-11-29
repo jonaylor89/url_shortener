@@ -1,16 +1,12 @@
 #[macro_use]
 extern crate serde_derive;
 
-#[macro_use]
-extern crate log;
-extern crate simple_logger;
-
 use rand::{thread_rng, Rng};
 use redis::Commands;
 
 use lambda_http::{
     handler,
-    http::{self, StatusCode},
+    http::StatusCode,
     lambda_runtime::{self, Context, Error},
     Request, Response,
 };
@@ -33,14 +29,14 @@ async fn main() -> Result<(), Error> {
     Ok(())
 }
 
-async fn my_handler(request: Request, c: Context) -> http::Result<Response<CustomOutput>> {
-    let body: CustomEvent = request.body();
+async fn my_handler(request: Request, _c: Context) -> Result<Response<Vec<u8>>, Error> {
+    let body: CustomEvent = serde_json::from_slice(request.body().as_ref()).unwrap();
     if body.value == "" {
         return Ok(Response::builder()
-            .header("Access-Control-Allow-Headers", "*")
+            .header("Access-Control-Allow-Origin", "*")
             .header("Access-Control-Allow-Headers", "*")
             .status(StatusCode::BAD_REQUEST)
-            .body(CustomOutput { key: 0_u32 }).unwrap());
+            .body(serde_json::to_vec(&CustomOutput { key: 0_u32 }).unwrap()).unwrap());
     }
     // connect to redis
     let redis_addr = std::env::var("REDIS_ADDRESS").unwrap();
@@ -68,11 +64,11 @@ async fn my_handler(request: Request, c: Context) -> http::Result<Response<Custo
             .header("Access-Control-Allow-Origin", "*")
             .header("Access-Control-Allow-Headers", "*")
             .status(StatusCode::OK)
-            .body(CustomOutput { key: key }).unwrap()),
+            .body(serde_json::to_vec(&CustomOutput { key: key }).unwrap()).unwrap()),
         Err(_e) => Ok(Response::builder()
             .header("Access-Control-Allow-Origin", "*")
             .header("Access-Control-Allow-Headers", "*")
             .status(StatusCode::NOT_FOUND)
-            .body(CustomOutput { key: 0_u32 }).unwrap()),
+            .body(serde_json::to_vec(&CustomOutput { key: 0_u32 }).unwrap()).unwrap()),
     }
 }
