@@ -3,14 +3,24 @@
     let shortUrl = "";
 
     async function click() {
-        const api = "https://6uy7eq7dpi.execute-api.us-east-1.amazonaws.com/prod/set";
-        const key = await fetch(api, {
-            method: "POST",
-            body: JSON.stringify({
-                value: longUrl,
-            }),
-        });
-        shortUrl = `http://${window.location.host}/${key}`;
+        console.log("URL", longUrl);
+        const api =
+            "https://6uy7eq7dpi.execute-api.us-east-1.amazonaws.com/prod/set";
+        try {
+            const res = await fetch(api, {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    value: longUrl,
+                }),
+            });
+            const url = JSON.parse(await res.text()).url;
+            shortUrl = `http://${url}`;
+        } catch (e) {
+            console.log(e);
+        }
     }
 </script>
 

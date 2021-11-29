@@ -6,7 +6,9 @@ authors = ["John Naylor <jonaylor89@gmail.com>"]
 autobins = false
 
 [dependencies]
+tokio = "1.14.0"
 lambda_runtime = "0.1"
+lambda_http = "0.4.1"
 serde = "^1"
 serde_json = "^1"
 serde_derive = "^1"
